@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hearts & Tasks</title>
+    <style>
+        /* Apply background image to the entire body */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('cross.jpg'); 
+            background-size: cover; 
+            background-position: center center;
+            background-repeat: no-repeat; 
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white; 
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .random-verse {
+            width: 300px;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .random-verse h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .random-verse p {
+            font-size: 1.2em;
+            color: #d3d3d3;
+        }
+
+        .verse-display {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+        }
+
+        .emotion-buttons {
+            margin: 20px 0;
+        }
+
+        .emotion-btn {
+            background-color: rgba(0, 0, 0, 0.6); 
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            margin: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .emotion-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8); /* Darker background on hover */
+        }
+
+        #verseText {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* To-Do List Styles */
+        .todo-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            margin-top: 20px;
+        }
+
+        .todo-container h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .todo-container input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+
+        .todo-container button {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .todo-container button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .todo-list li {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .todo-list li button {
+            background-color: red;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .todo-list li button:hover {
+            background-color: darkred;
+        }
+
+        /* Joke Box Styles */
+        .joke-box {
+            position: fixed;
+            bottom: 60px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            max-width: 300px;
+            font-size: 1.2em;
+        }
+
+        .joke-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .joke-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side: Random Verse of the Day -->
+        <div class="random-verse">
+            <h2>Verse of the Day</h2>
+            <p id="randomVerseText">Loading...</p>
+        </div>
+
+        <!-- Right Side: Emotional Support Section with To-Do List -->
+        <div class="verse-display">
+            <header>
+                <h1>Hearts & Tasks</h1>
+                <p>Click on an emotion to receive a Bible verse that brings comfort and peace.</p>
+            </header>
+
+            <div class="emotion-buttons">
+                <button class="emotion-btn" onclick="showVerse('happy')">Happy</button>
+                <button class="emotion-btn" onclick="showVerse('sad')">Sad</button>
+                <button class="emotion-btn" onclick="showVerse('depressed')">Depressed</button>
+                <button class="emotion-btn" onclick="showVerse('lonely')">Lonely</button>
+                <button class="emotion-btn" onclick="showVerse('afraid')">Afraid</button>
+                <button class="emotion-btn" onclick="showVerse('angry')">Angry</button>
+                <button class="emotion-btn" onclick="showVerse('positivity')">Positivity</button>
+                <button class="emotion-btn" onclick="showVerse('missing')">Missing</button>
+            </div>
+
+            <div class="verse-display">
+                <p id="verseText">Select an emotion to view a Bible verse.</p>
+            </div>
+
+            <!-- To-Do List Section -->
+            <div class="todo-container">
+                <h2>To-Do List</h2>
+                <div>
+                    <input type="text" id="todoInput" placeholder="Add a task...">
+                    <button onclick="addTodo()">Add</button>
+                </div>
+                <ul id="todoList" class="todo-list">
+                    <!-- To-Do items will appear here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Joke Section -->
+    <div class="joke-box" id="jokeBox">
+        <p id="jokeText">Loading...</p>
+    </div>
+    <button class="joke-btn" onclick="showJoke()">Do you wanna read a joke ma'am !!!</button>
+
+    <script>
+        // Define multiple Bible verses for each emotion
+        const verses = {
+            sad: [
+                "The Lord is near to the brokenhearted and saves the crushed in spirit. - Psalm 34:18",
+                "He heals the brokenhearted and binds up their wounds. - Psalm 147:3",
+                "We were buried therefore with him by baptism into death, in order that, just as Christ was raised from the dead by the glory of the Father, we too might walk in newness of life. - Romans 6:4",
+                "But the Lord is faithful. He will establish you and guard you against the evil one. - 2 Thessalonians 3:3",
+                "And my God will supply every need of yours according to his riches in glory in Christ Jesus. - Philippians 4:19",
+                "But he said to me, “My grace is sufficient for you, for my power is made perfect in weakness.” Therefore I will boast all the more gladly of my weaknesses, so that the power of Christ may rest upon me - 2 Corinthians 12:9",
+                "Keep your life free from love of money, and be content with what you have, for he has said, “I will never leave you nor forsake you.” - Hebrews 13:5",
+                "Let not your hearts be troubled. Believe in God; believe also in me. - John 14:1",
+                "Cast your burden on the Lord, and he will sustain you; he will never permit the righteous to be moved. - Psalm 55:22",
+                "Peace I leave with you; my peace I give to you. Not as the world gives do I give to you. Let not your hearts be troubled, neither let them be afraid. - John 14:27",
+                "The Lord is close to the brokenhearted; he rescues those whose spirits are crushed. - Psalm 34:18"
+            ],
+            happy: [
+                "Rejoice in the Lord always. I will say it again: Rejoice! - Philippians 4:4",
+                "The joy of the Lord is your strength. - Nehemiah 8:10",
+                "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope. - Jeremiah 29:11",
+                "I can do all things through him who strengthens me. - Philippians 4:13",
+                "May the God of hope fill you with all joy and peace as you trust in him, so that you may overflow with hope by the power of the Holy Spirit. - Romans 15:13",
+                "Take delight in the Lord, and he will give you the desires of your heart. - Psalm 37: 4",
+                "Joyful are people of integrity who follow the instructions of the Lord. Joyful are those who obey his laws and search for him with all their hearts. They do not compromise with evil, and they walk only in his paths.- Psalm 119: 1-3",
+                "A cheerful heart is good medicine, but a crushed spirit dries up the bones. - Proverbs 17:22"
+            ],
+            depressed: [
+                "Cast all your anxiety on him because he cares for you. - 1 Peter 5:7",
+                "When you go through deep waters, I will be with you. - Isaiah 43:2",
+                "He heals the brokenhearted and binds up their wounds - Psalm 147:3",
+                "Be joyful in hope, patient in affliction, faithful in prayer - Romans 12:12",
+                "I have told you these things, so that in me you may have peace. In this world you will have trouble. But take heart! I have overcome the world. - John 16:33",
+                "Blessed are those who mourn, for they will be comforted - Matthew 5:4",
+                "The Lord is a refuge for the oppressed, a stronghold in times of trouble - Psalm 9:9",
+                "Because of the Lord’s great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness. - Lamentations 3:22-23",
+                "In my distress I called to the Lord; I called out to my God. From his temple he heard my voice; my cry came to his ears - 2 Samuel 22:7",
+                "Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me. - Psalm 23:4",
+                "Why, my soul, are you downcast? Why so disturbed within me? Put your hope in God, for I will yet praise him, my Savior and my God. - Psalm 42: 11",
+                "The Lord is close to the brokenhearted and saves those who are crushed in spirit. - Psalm 34:18"
+            ],
+            afraid: [
+                "What time I am afraid, I will trust in thee. In God I will praise his word, In God I have put my trust; I will not fear what flesh can do unto me. - Psalms 56:3-4 KJV",
+                "For the Spirit God gave us does not make us timid, but gives us power, love, and self-discipline. - 2 Timothy 1:7",
+                "When I am afraid, I put my trust in you - Psalm 56:3",
+                "Have no fear of sudden disaster or of the ruin that overtakes the wicked, for the Lord will be at your side and will keep your foot from being snared - Proverbs 3:25-26",
+                "He will cover you with his feathers, and under his wings you will find refuge; his faithfulness will be your shield and rampart. - Psalm 91:4",
+                "Therefore do not worry about tomorrow, for tomorrow will worry about itself. Each day has enough trouble of its own - Matthew 6:34",
+                "When I am afraid, I will put my trust in You. In God, whose word I praise In God I have put my trust; I shall not be afraid. What can mere man do to me? - Psalms 56:3-4 NASB 1995",
+                "When I am afraid, I will trust you. I praise God for his word. I trust God, so I am not afraid. What can human beings do to me? - Psalms 56:3-4 NCV"
+            ],
+            lonely: [
+                "Be strong and courageous. Do not be afraid or terrified because of them, for the Lord your God goes with you; he will never leave you nor forsake you. - Deuteronomy 31:6",
+                "I will not leave you as orphans; I will come to you. - John 14:18",
+                "Never will I leave you; never will I forsake you. - Hebrews 13:5",
+                "You have searched me, Lord, and you know me. You know when I sit and when I rise; you perceive my thoughts from afar. - Psalm 139:1-2",
+                "Can a mother forget the baby at her breast and have no compassion on the child she has borne? Though she may forget, I will not forget you! - Isaiah 49:15",
+                "God sets the lonely in families, he leads out the prisoners with singing; but the rebellious live in a sun-scorched land. - Psalm 68:6",
+                "Turn to me and be gracious to me, for I am lonely and afflicted. - Psalm 25:16",
+                "Even though I walk through the darkest valley, I will fear no evil, for you are with me. - Psalm 23:4"
+            ],
+            angry: [
+                "In your anger do not sin: Do not let the sun go down while you are still angry. - Ephesians 4:26",
+                "Refrain from anger and turn from wrath; do not fret—it leads only to evil - Psalm 37:8",
+                "Better a patient person than a warrior, those with self-control than those who take a city. - Proverbs 16:32",
+                "Fools give full vent to their rage, but the wise bring calm in the end. - Proverbs 29:11",
+                "But now you must also rid yourselves of all such things as these: anger, rage, malice, slander, and filthy language from your lips. - Colossians 3:8",
+                "Everyone should be quick to listen, slow to speak and slow to become angry. - James 1:19",
+                "A gentle answer turns away wrath, but a harsh word stirs up anger. - Proverbs 15:1"
+            ],
+            missing: [
+                "He will wipe away every tear from their eyes, and death shall be no more, neither shall there be mourning, nor crying, nor pain anymore, for the former things have passed away. - Revelation 21:4",
+                "The Lord is near to the brokenhearted and saves the crushed in spirit - Psalm 34:18",
+                "Blessed are those who mourn, for they will be comforted. - Matthew 5:4",
+                "But about the resurrection of the dead—have you not read what God said to you, 'I am the God of Abraham, the God of Isaac, and the God of Jacob'? He is not the God of the dead but of the living. - Matthew 22:31-32",
+                "Precious in the sight of the Lord is the death of his faithful servants. - Psalm 116:15",
+                "But now that he is dead, why should I go on fasting? Can I bring him back again? I will go to him, but he will not return to me. - 2 Samuel 12:23",
+                "If we live, we live for the Lord; and if we die, we die for the Lord. So, whether we live or die, we belong to the Lord. - Romans 14:8"
+            ],
+            positivity: [
+                "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope. - Jeremiah 29:11",
+                "I can do all things through him who strengthens me. - Philippians 4:13",
+                "Joyful are people of integrity who follow the instructions of the Lord. Joyful are those who obey his laws and search for him with all their hearts. They do not compromise with evil, and they walk only in his paths.- Psalm 119: 1-3",
+                "A cheerful heart is good medicine, but a crushed spirit dries up the bones. - Proverbs 17:22",
+                "For God gave us a spirit not of fear but of power and love and self-control. - 2 Timothy 1:7"
+            ]
+        };
+
+        // Define multiple jokes to be shown randomly
+        const jokes = [
+            "What did Adam say when he was asked his favorite holiday? It's Christmas, Eve.",
+            "Which nursery song would Jesus have heard the most? Mary Had a Little Lamb.",
+            "Why did Adam and Eve do math every day? They were told to be fruitful and multiply.",
+            "Why don't skeletons fight each other? They don't have the guts!",
+            "What does a storm cloud wear under his raincoat? Thunderwear.",
+            "Why don’t eggs tell jokes? They might crack up!",
+            "Why did the student eat his homework? Because the teacher told him it was a piece of cake.",
+            "What did the lava say to his girlfriend? I lava you!",
+            "Name the kind of tree you can hold in your hand? A palm tree!",
+            "What did the policeman say to his hungry stomach? Freeze. You're under a vest.",
+            "Why are snails slow? Because they're carrying a house on their back."
+        ];
+
+        // Function to display Bible verse based on emotion
+        function showVerse(emotion) {
+            const verseText = document.getElementById("verseText");
+
+            const verseArray = verses[emotion];
+            const randomIndex = Math.floor(Math.random() * verseArray.length);
+            verseText.textContent = verseArray[randomIndex];
+        }
+
+        // Function to load a random verse of the day
+        window.onload = function() {
+            loadTodoList();
+            loadRandomVerse();
+        };
+
+        function loadRandomVerse() {
+            const randomVerseText = document.getElementById("randomVerseText");
+            const randomVerses = [
+                "The Lord is my shepherd, I lack nothing. - Psalm 23:1",
+                "The Lord is my light and my salvation—whom shall I fear? - Psalm 27:1",
+                "May the God of hope fill you with all joy and peace as you trust in him, so that you may overflow with hope by the power of the Holy Spirit. - Romans 15:13",
+                "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight. - Proverbs 3:5-6",
+                "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint. - Isaiah 40:31",
+                "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope. - Jeremiah 29:11",
+                "Rejoice in the Lord always. I will say it again: Rejoice! - Philippians 4:4",
+                "This is the day the Lord has made; let us rejoice and be glad in it - Psalm 118:24",
+                "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope. - Jeremiah 29:11"
+            ];
+            const randomIndex = Math.floor(Math.random() * randomVerses.length);
+            randomVerseText.textContent = randomVerses[randomIndex];
+        }
+
+        // Joke functionality - Show a random joke
+        function showJoke() {
+            const jokeBox = document.getElementById("jokeBox");
+            const jokeText = document.getElementById("jokeText");
+
+            // Select a random joke
+            const randomIndex = Math.floor(Math.random() * jokes.length);
+            jokeText.textContent = jokes[randomIndex];
+
+            // Toggle joke box visibility
+            jokeBox.style.display = jokeBox.style.display === "block" ? "none" : "block";
+        }
+
+        // Add To-Do item functionality
+        function loadTodoList() {
+            const todoList = document.getElementById("todoList");
+            const savedTodos = JSON.parse(localStorage.getItem("todos"));
+
+            if (savedTodos) {
+                savedTodos.forEach(todo => {
+                    const li = document.createElement("li");
+                    li.textContent = todo.text;
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "X";
+                    deleteButton.onclick = function () {
+                        todoList.removeChild(li);
+                        removeTodoFromStorage(todo.text);
+                    };
+
+                    li.appendChild(deleteButton);
+                    todoList.appendChild(li);
+                });
+            }
+        }
+
+        function saveTodoList() {
+            const todoListItems = document.querySelectorAll("#todoList li");
+            const todos = [];
+
+            todoListItems.forEach(item => {
+                const todoText = item.textContent.slice(0, -1); // Remove the "X" button text
+                todos.push({ text: todoText });
+            });
+
+            localStorage.setItem("todos", JSON.stringify(todos));
+        }
+
+        function addTodo() {
+            const todoInput = document.getElementById("todoInput");
+            const todoList = document.getElementById("todoList");
+
+            if (todoInput.value !== "") {
+                const li = document.createElement("li");
+                li.textContent = todoInput.value;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "X";
+                deleteButton.onclick = function () {
+                    todoList.removeChild(li);
+                    removeTodoFromStorage(todoInput.value);
+                };
+
+                li.appendChild(deleteButton);
+                todoList.appendChild(li);
+
+                saveTodoList(); // Save to localStorage after adding
+                todoInput.value = "";
+            }
+        }
+
+        function removeTodoFromStorage(todoText) {
+            const savedTodos = JSON.parse(localStorage.getItem("todos"));
+            const updatedTodos = savedTodos.filter(todo => todo.text !== todoText);
+            localStorage.setItem("todos", JSON.stringify(updatedTodos));
+        }
+    </script>
+</body>
+</html>
