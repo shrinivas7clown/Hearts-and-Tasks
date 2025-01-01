@@ -1,11 +1,14 @@
 # Hearts-and-Tasks
 step 1 
+download the zip file.
+
+step 2
 Open VS-code
 
-step 2 
+step 3 
 Open the bible folder in it.
 
-step 3 
+step 4 
 Run the bible.html file with any of the browser like chrome, edge etc.
 
 DONE!!!
