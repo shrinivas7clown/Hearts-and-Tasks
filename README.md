@@ -1,4 +1,4 @@
-# Hearts-and-Tasks
+# Fun with Bible
 step 1 
 download the zip file.
 
